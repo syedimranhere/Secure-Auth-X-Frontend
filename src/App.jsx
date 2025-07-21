@@ -13,6 +13,11 @@ import Profile from "./pages/profile.jsx"
 
 function App() {
 
+
+
+
+
+
   return (
     <>
       <Routes>
@@ -30,5 +35,4 @@ function App() {
     </>
   )
 }
-
 export default App
