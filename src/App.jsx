@@ -9,6 +9,8 @@ import { Dashboard } from "./pages/dashboard.jsx"
 import Unauth from "./pages/unauth.jsx"
 import NotFound from "./pages/notfound"
 import Profile from "./pages/profile.jsx"
+
+
 function App() {
 
   return (
