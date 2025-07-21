@@ -29,7 +29,7 @@ SecureAuthX is a modern authentication frontend built with **React**, designed f
 | Tailwind CSS | UI Styling           |
 
 ---
-### The bakcned needs to be connected so that the login and other routes acutally respond, the backned ha sa seperate repo
+### The backend needs to be connected so that the login and other routes acutally respond, the backned has a seperate repo
  Working
 
 1. **User Login**: With email or username.
