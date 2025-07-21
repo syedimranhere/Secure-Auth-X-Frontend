@@ -1,0 +1,108 @@
+
+import { User, ArrowLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { UseUserContext } from '../context/UserContext';
+import axios from "axios"
+
+export default function Profile() {
+
+    const { user } = UseUserContext()
+
+    const navigate = useNavigate();
+    useEffect(() => {
+        const verifyAccess = async () => {
+            try {
+                const x = await axios.post('/api/v1/user/get-access');
+                console.log(x.data)
+
+                // You can optionally set user state here
+            } catch (err) {
+                navigate('/unauthorized'); // Redirect if check fails
+                console.log("No Joke")
+            }
+        };
+        verifyAccess();
+    }, [navigate]);
+    const HandleMe = () => {
+        navigate("/dashboard")
+    }
+    return (
+        <div className="relative min-h-screen bg-black overflow-hidden">
+            {/* Background Image with Blur */}
+            <div className="absolute inset-0 z-0">
+                <img
+                    src="/assets/anotherbg.jpg"
+                    alt="Profile Background"
+                    className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+            </div>
+
+            {/* Main Content Overlay */}
+            <div className="relative z-10 min-h-screen flex flex-col">
+                {/* Header */}
+                <header className="flex justify-between items-center px-8 py-4 bg-transparent border-b border-gray-800">
+                    <div className="flex items-center space-x-6">
+                        <div className="text-2xl font-bold tracking-wider">
+                            <span className="text-white">Secure</span>
+                            <span className="text-[#00FFD1]">A</span>
+                            <span className="text-white">uth</span>
+                            <span className="text-[#0773df]">X</span>
+                        </div>
+                    </div>
+
+
+                    <button
+                        onClick={HandleMe}
+                        // onClick={handleDashboardClick}
+                        className="flex items-center space-x-2 px-4 py-2 bg-gray-600 hover:bg-blue-300 text-white rounded-xl transition-all duration-200"
+                    >
+                        <ArrowLeft className="w-4 h-4" />
+                        <span>Dashboard</span>
+                    </button>
+                </header>
+
+                {/* Main Content */}
+                <main className="flex-grow flex items-center justify-center p-4">
+                    {/* Glass container */}
+                    <div className="w-full max-w-md backdrop-blur-xl bg-white/10 border border-white/30 rounded-2xl shadow-2xl p-8 text-white">
+
+                        {/* Profile Icon */}
+                        <div className="flex justify-center mb-8">
+                            <div className="w-20 h-20 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center shadow-lg">
+                                <User className="w-10 h-10 text-white" />
+                            </div>
+                        </div>
+
+                        <h2 className="text-3xl font-bold mb-8 text-center">Your Profile </h2>
+
+                        <div className="space-y-6">
+                            <div>
+                                <label className="block text-sm font-semibold text-gray-300 mb-2">Username</label>
+                                <div className="bg-white/20 backdrop-blur-md px-4 py-3 rounded-lg text-lg border border-white/20">
+                                    {user.username}
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-semibold text-gray-300 mb-2">Full Name</label>
+                                <div className="bg-white/20 backdrop-blur-md px-4 py-3 rounded-lg text-lg border border-white/20">
+                                    {user.fullname}
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-semibold text-gray-300 mb-2">Email</label>
+                                <div className="bg-white/20 backdrop-blur-md px-4 py-3 rounded-lg text-lg border border-white/20">
+                                    {user.email}
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    );
+}
