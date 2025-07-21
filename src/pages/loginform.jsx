@@ -44,6 +44,9 @@ export default function Login() {
 
 
     const handleLogin = async () => {
+        if (!email || !pass) {
+            setError("Both fields are required")
+        }
         setError("");
         setLoading(true);
         try {

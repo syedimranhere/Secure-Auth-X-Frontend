@@ -1,13 +1,3 @@
-/**
- * Unauthorized Access Page
- * ------------------------
- * - Centers content vertically & horizontally
- * - Uses lucide-react for a crisp icon (install with `npm i lucide-react`)
- * - Gradient text + CTA button for better UX
- * - Full Tailwind styling and clear comments for future maintenance
- */
-
-import React from "react";
 import { Link } from "react-router-dom";
 import { ShieldOff } from "lucide-react"; // Icon library
 
@@ -35,7 +25,6 @@ export default function Unauth() {
                 Take&nbsp;Me&nbsp;Home
             </Link>
 
-            {/* Decorative image (optional) */}
 
         </main>
     );
