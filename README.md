@@ -40,10 +40,10 @@ SecureAuthX is a modern authentication frontend built with **React**, designed f
 
 ---
 
-## 🛠️ Getting Started
-
+## 🛠 Getting Started
+Check package.json so that the proceess is smoother
 ```bash
 git clone https://github.com/yourusername/secureauthx-frontend.git
 cd secureauthx-frontend
 npm install
-npm r
+npm run dev
