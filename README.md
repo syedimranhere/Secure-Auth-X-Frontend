@@ -43,7 +43,7 @@ SecureAuthX is a modern authentication frontend built with **React**, designed f
 ## 🛠 Getting Started
 Check package.json && vite.config.js so that the proceess is smoother
 ```bash
-git clone https://github.com/yourusername/secureauthx-frontend.git
+git clone https://github.com/syedimranhere/Secure-Auth-X-Frontend.git
 cd Secure-Auth-X-frontend
 npm i
 npm run dev
