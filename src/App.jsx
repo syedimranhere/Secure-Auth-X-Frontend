@@ -13,11 +13,6 @@ import Profile from "./pages/profile.jsx"
 
 function App() {
 
-
-
-
-
-
   return (
     <>
       <Routes>

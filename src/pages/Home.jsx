@@ -4,8 +4,7 @@ import { Link } from "react-router-dom";
 export default function Home() {
   return (
     <div className="relative min-h-screen w-full">
-      {/* Background Image */}
-      {/* 🔗 Top-Right About Button */}
+  
       <div className="absolute top-6 right-6 z-50">
 
         <motion.a
