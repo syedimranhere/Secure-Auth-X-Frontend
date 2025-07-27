@@ -7,12 +7,12 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
     port: 6999,
-    proxy: {
-      "/api": {
-        // target means backend server
-        target: "http://localhost:7000",
-      },
-      //add more shortcuts/proxy prefixes if needed
-    },
+    // proxy: {
+    //   "/api": {
+    //     // target means backend server
+    //     target: "http://localhost:7000",
+    //   },
+    //   //add more shortcuts/proxy prefixes if needed
+    // },
   },
 });

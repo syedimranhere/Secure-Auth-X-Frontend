@@ -37,7 +37,7 @@ export default function About() {
                 <motion.div
                     className="flex flex-col items-center"
                     initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
+                    animate={{ scale: 1, opacity: 1 }} W
                     transition={{ duration: 1 }}
                 >
                     <div className="relative w-30 h-30 md:w-40 md:h-40 lg:w-45lg:h-45 rounded-full border border-gray-300/30 bg-white/5 shadow-lg overflow-hidden">
