@@ -9,7 +9,7 @@ export default function Profile() {
     const navigate = useNavigate();
 
     const { user } = UseUserContext()
-    const { loading } = useAuth()
+    // const { loading } = useAuth()
 
     const HandleMe = () => {
         navigate("/dashboard")

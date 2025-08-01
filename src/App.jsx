@@ -21,11 +21,17 @@ function App() {
         <Route path="/forgotpassword" element={<ForgetPass1 />} />
         <Route path="/resetpassword" element={<ResetPassword />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/myprofile" element={<Profile />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+
         <Route path="/unauthorized" element={<Unauth />} />
         <Route path="*" element={<NotFound />} />
+
+
+        <Route path="/myprofile" element={<Profile />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+
+
       </Routes>
+
     </>
   )
 }

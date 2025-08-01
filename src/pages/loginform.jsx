@@ -1,7 +1,6 @@
 import { useNavigate, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Eye, EyeOff, LogIn } from "lucide-react";
-import API from "../../utils/axiosInstance";
+import API from "../../utils/axiosInstance.js";
 import { UseUserContext } from "../context/UserContext";
 import { useAuth } from "../hooks/useAuth.js";
 
@@ -14,9 +13,6 @@ export default function Login() {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const { setUser, setIsAuthenticated } = UseUserContext();
-
-    // Redirect if already authenticated
-    useAuth(false);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -40,9 +36,7 @@ export default function Login() {
         return () => clearInterval(interval);
     }, []);
 
-    const handleLogin = async (e) => {
-        e.preventDefault();
-
+    const handleLogin = async () => {
         if (!email || !pass) {
             setError("Both fields are required");
             return;
@@ -55,6 +49,8 @@ export default function Login() {
             const response = await API.post("/user/login", {
                 EmailorUsername: email,
                 Password: pass,
+            }, {
+                withCredentials: true,
             });
 
             if (response?.data?.success) {
@@ -89,126 +85,105 @@ export default function Login() {
 
     return (
         <div className="relative min-h-screen w-full bg-black">
+            {/* Blurred Background */}
             <div className="absolute inset-0">
                 <img
-                    src="https://images.pexels.com/photos/325185/pexels-photo-325185.jpeg"
-                    alt="Login Background"
+                    src="/assets/bg.png"
+                    alt="Background"
                     className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-black/60 backdrop-blur-md" />
             </div>
 
+            {/* Foreground Content */}
             <div className="relative z-10">
-                <nav className="flex justify-between items-center px-8 py-6">
-                    <Link to="/" className="text-2xl font-bold tracking-wider group">
+                {/* Navbar */}
+                <nav className="flex justify-between items-center px-8 py-4 bg-transparent">
+                    <Link to="/" className="text-white text-2xl font-bold tracking-wider">
                         <span className="text-white">Secure</span>
-                        <span className="text-[#00FFD1] group-hover:text-white transition-colors">A</span>
+                        <span className="text-[#00FFD1]">A</span>
                         <span className="text-white">uth</span>
-                        <span className="text-[#0773df] group-hover:text-[#00FFD1] transition-colors">X</span>
+                        <span className="text-[#0773df]">X</span>
                     </Link>
 
-                    <div className="flex gap-6 text-sm font-medium">
-                        <Link to="/" className="text-gray-300 hover:text-[#00FFD1] transition-colors">
-                            Home
-                        </Link>
-                        <Link to="/about" className="text-gray-300 hover:text-[#00FFD1] transition-colors">
-                            About
-                        </Link>
+                    <div className="flex gap-6 text-white text-sm font-medium">
+                        <Link to="/" className="hover:text-[#00FFD1] transition">Home</Link>
+                        <Link to="/about" className="hover:text-[#00FFD1] transition">About</Link>
                     </div>
                 </nav>
 
-                <div className="flex items-center justify-center min-h-[calc(100vh-100px)]">
-                    <div className="bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl rounded-3xl p-8 w-[90%] max-w-md hover:bg-white/15 transition-all duration-300">
-                        <div className="text-center mb-8">
-                            <div className="bg-[#00FFD1]/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <LogIn className="w-8 h-8 text-[#00FFD1]" />
-                            </div>
-                            <h2 className="text-3xl font-bold text-white mb-2">Welcome Back</h2>
-                            <p className="text-gray-400">Sign in to your account</p>
-                        </div>
+                {/* Login Form */}
+                <div className="flex items-center justify-center min-h-[80vh]">
+                    <div className="bg-white/5 backdrop-blur-lg shadow-xl rounded-2xl p-8 w-[90%] max-w-md">
+                        <h2 className="text-2xl text-white font-semibold text-center mb-6">
+                            Login to your account
+                        </h2>
 
-                        <form onSubmit={handleLogin} className="space-y-6">
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium text-gray-300">Email or Username</label>
+                        <form
+                            className="space-y-4"
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                handleLogin();
+                            }}
+                        >
+                            <input
+                                type="text"
+                                placeholder="Email Or Username"
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="w-full px-4 py-2 bg-white/10 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-[#00FFD1] placeholder:text-gray-300"
+                            />
+
+                            <div className="relative">
                                 <input
-                                    type="text"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full px-4 py-3 bg-white/10 border border-white/20 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00FFD1] focus:border-transparent placeholder:text-gray-400 transition-all"
-                                    placeholder="Enter your email or username"
+                                    type={showPassword ? "text" : "password"}
+                                    placeholder="Password"
+                                    onChange={(e) => setPass(e.target.value)}
+                                    className="w-full px-4 py-2 pr-10 bg-white/10 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-[#00FFD1] placeholder:text-gray-300"
                                 />
-                            </div>
-
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium text-gray-300">Password</label>
-                                <div className="relative">
-                                    <input
-                                        type={showPassword ? "text" : "password"}
-                                        value={pass}
-                                        onChange={(e) => setPass(e.target.value)}
-                                        className="w-full px-4 py-3 pr-12 bg-white/10 border border-white/20 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00FFD1] focus:border-transparent placeholder:text-gray-400 transition-all"
-                                        placeholder="Enter your password"
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-[#00FFD1] transition-colors"
-                                    >
-                                        {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div className="text-right">
-                                <Link
-                                    to="/forgotpassword"
-                                    className="text-sm text-[#00FFD1] hover:text-white transition-colors hover:underline"
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-300 hover:text-[#00FFD1] text-sm"
                                 >
+                                    {showPassword ? "Hide" : "Show"}
+                                </button>
+                            </div>
+
+                            <div className="text-right text-sm">
+                                <Link to="/forgotpassword" className="text-[#00FFD1] hover:underline hover:text-white">
                                     Forgot Password?
                                 </Link>
                             </div>
 
-                            {error && (
-                                <div className="p-3 bg-red-500/20 border border-red-500/30 rounded-xl">
-                                    <p className="text-sm text-red-300 text-center">{error}</p>
-                                </div>
-                            )}
-
                             <button
                                 type="submit"
                                 disabled={disableLogin || loading}
-                                className={`w-full py-3 font-semibold rounded-xl transition-all duration-200 flex items-center justify-center gap-2 ${disableLogin || loading
-                                    ? "bg-gray-600 text-gray-400 cursor-not-allowed"
-                                    : "bg-gradient-to-r from-[#00FFD1] to-[#0773df] text-black hover:from-[#00FFD1]/90 hover:to-[#0773df]/90 hover:shadow-lg hover:shadow-[#00FFD1]/25"
+                                className={`w-full py-2 font-semibold rounded-md transition-all ${disableLogin
+                                    ? "bg-[#00FFD1]/30 text-black cursor-not-allowed"
+                                    : loading
+                                        ? "bg-[#00FFD1]/50 text-black cursor-not-allowed"
+                                        : "bg-[#00FFD1] text-black hover:bg-white"
                                     }`}
                             >
-                                {loading ? (
-                                    <>
-                                        <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
-                                        Signing in...
-                                    </>
-                                ) : disableLogin ? (
-                                    "Please wait..."
-                                ) : (
-                                    <>
-                                        <LogIn className="w-5 h-5" />
-                                        Sign In
-                                    </>
-                                )}
+                                {loading ? "Logging in..." : disableLogin ? "Please wait..." : "Login"}
                             </button>
+
+                            {error && (
+                                <div className="text-sm text-red-500 font-medium text-center animate-fade-shake mt-2">
+                                    {error}
+                                </div>
+                            )}
                         </form>
 
-                        <div className="mt-8 text-center">
-                            <p className="text-gray-400">
-                                Don't have an account?{" "}
-                                <Link
-                                    to="/register"
-                                    className="text-[#00FFD1] hover:text-white transition-colors font-medium hover:underline"
-                                >
-                                    Create one
-                                </Link>
-                            </p>
-                        </div>
+                        <p className="mt-6 text-sm text-gray-300 text-center">
+                            Don’t have an account?{" "}
+                            <Link
+                                to="/register"
+                                className="text-[#00FFD1] hover:underline hover:text-white"
+                            >
+                                Create one
+                            </Link>
+                        </p>
                     </div>
                 </div>
             </div>

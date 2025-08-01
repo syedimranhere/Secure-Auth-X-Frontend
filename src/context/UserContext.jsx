@@ -11,7 +11,9 @@ export const UserContextProvider = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const response = await API.get('/user/verify-token');
+        const response = await API.get('/user/verify-access"', {
+          withCredentials: true,
+        });
         const data = response.data;
         setUser({
           username: data.username,
