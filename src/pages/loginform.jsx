@@ -1,9 +1,6 @@
-// loginform.jsx
 import { useNavigate, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import API from "../../utils/axiosInstance.js";
-import { UseUserContext } from "../context/UserContext";
-import { useAuth } from "../hooks/useAuth.js";
+import axios from "axios";
 
 export default function Login() {
     const [disableLogin, setDisableLogin] = useState(false);
@@ -13,13 +10,16 @@ export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    const { setUser, setIsAuthenticated } = UseUserContext();
-
+    // const { setUser } = UseUserContext();
+    // Handle rate limiting and unlock logic
     useEffect(() => {
-        const interval = setInterval(() => {
+        const checkRateLimit = () => {
             const data = JSON.parse(localStorage.getItem("blockedInfo") || "{}");
-            if (!data?.unlockTime) return;
-
+            if (!data?.unlockTime) {
+                setDisableLogin(false);
+                setError("");
+                return;
+            }
             const unlockTime = Number(data.unlockTime);
             const now = Date.now();
 
@@ -32,11 +32,15 @@ export default function Login() {
                 setError(`Too many login attempts. Try again in ${secondsLeft}s`);
                 setDisableLogin(true);
             }
-        }, 1000);
+        };
 
+        // Check immediately
+        checkRateLimit();
+
+        // Then check every second
+        const interval = setInterval(checkRateLimit, 1000);
         return () => clearInterval(interval);
     }, []);
-
     const handleLogin = async () => {
         if (!email || !pass) {
             setError("Both fields are required");
@@ -47,27 +51,21 @@ export default function Login() {
         setLoading(true);
 
         try {
-            const response = await API.post("/user/login", {
+            const response = await axios.post("/api/v1/user/login", {
                 EmailorUsername: email,
                 Password: pass,
-            }, {
-                withCredentials: true,
             });
 
-            if (response?.data?.success) {
-                const userData = {
-                    email: response.data.email,
-                    username: response.data.username,
-                    fullname: response.data.fullname,
-                };
-
-                setUser(userData);
-                setIsAuthenticated(true);
-                localStorage.setItem("user", JSON.stringify(userData));
+            if (response?.data?.success && response?.data?.user) {
+                console.log('Login successful:', response.data.user);
+                // setUser(response.data.user);
                 navigate("/dashboard");
+
             }
         } catch (error) {
+            console.error('Login error:', error);
             const status = error?.response?.status;
+
             if (status === 429) {
                 setError("Too many login attempts. Try again after a minute.");
                 setDisableLogin(true);
@@ -83,7 +81,6 @@ export default function Login() {
             setLoading(false);
         }
     };
-
     return (
         <div className="relative min-h-screen w-full bg-black">
             {/* Blurred Background */}
@@ -130,6 +127,7 @@ export default function Login() {
                             <input
                                 type="text"
                                 placeholder="Email Or Username"
+                                value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 className="w-full px-4 py-2 bg-white/10 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-[#00FFD1] placeholder:text-gray-300"
                             />
@@ -138,6 +136,7 @@ export default function Login() {
                                 <input
                                     type={showPassword ? "text" : "password"}
                                     placeholder="Password"
+                                    value={pass}
                                     onChange={(e) => setPass(e.target.value)}
                                     className="w-full px-4 py-2 pr-10 bg-white/10 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-[#00FFD1] placeholder:text-gray-300"
                                 />
@@ -177,7 +176,7 @@ export default function Login() {
                         </form>
 
                         <p className="mt-6 text-sm text-gray-300 text-center">
-                            Don’t have an account?{" "}
+                            Don't have an account?{" "}
                             <Link
                                 to="/register"
                                 className="text-[#00FFD1] hover:underline hover:text-white"

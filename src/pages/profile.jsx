@@ -2,11 +2,11 @@
 import { User, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { UseUserContext } from '../context/UserContext';
-import { useAuth } from '../hooks/useAuth.js'; // FIXED: Import useAuth
+// import { useAuth } from '../hooks/useAuth.js'; // FIXED: Import useAuth
 
 export default function Profile() {
-    const { user } = UseUserContext();
-    const { loading } = useAuth(); // FIXED: Use useAuth hook since this is a protected route
+    const { user, loading } = UseUserContext();
+
     const navigate = useNavigate();
 
     const HandleMe = () => {

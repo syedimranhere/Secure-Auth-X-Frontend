@@ -1,5 +1,7 @@
+import axios from 'axios';
 import { useEffect, createContext, useState, useContext } from 'react';
-import API from '../../utils/axiosInstance';
+import { useNavigate, useLocation } from 'react-router-dom';
+// import API from '../../utils/axiosInstance';
 
 export const UserContext = createContext();
 export const UseUserContext = () => useContext(UserContext);
@@ -8,16 +10,19 @@ export const UserContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
-
+  const navigate = useNavigate();
+  const location = useLocation();
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        // FIXED: Check localStorage first for faster initial load
+        // First, try to get cached user data
         const savedUser = localStorage.getItem("user");
+        let cachedUser = null;
         if (savedUser) {
           try {
-            const userData = JSON.parse(savedUser);
-            setUser(userData);
+            cachedUser = JSON.parse(savedUser);
+            // Set cached data immediately to prevent redirect
+            setUser(cachedUser);
             setIsAuthenticated(true);
           } catch (parseError) {
             console.error('Failed to parse saved user data:', parseError);
@@ -25,63 +30,41 @@ export const UserContextProvider = ({ children }) => {
           }
         }
 
-        // FIXED: Only make backend verification if we have saved user data
-        // This prevents unnecessary requests on public pages
-        if (savedUser) {
-          const response = await API.get('/user/verify-access', {
-            withCredentials: true,
-          });
+        // Then verify with backend
+        const response = await axios.get('/api/v1/user/verify-access');
 
-          // FIXED: Backend only returns {message: "Tokens Valid"}, not user data
-          // If verification succeeds, keep the saved user data
-          if (response.status === 200) {
-            // User is authenticated, keep existing user data
-            console.log('Authentication verified');
-          }
-        }
-      } catch (error) {
-        console.error('Auth check failed:', error);
-        // FIXED: Only clear auth state if it's actually an auth failure
-        if (error.response?.status === 401 || error.response?.status === 403) {
-          setIsAuthenticated(false);
+        if (response.data.success && response.data.user) {
+          // Update with fresh data from backend
+          setUser(response.data.user);
+          setIsAuthenticated(true);
+          console.log('Auth verified:', response.data.user);
+          localStorage.setItem("user", JSON.stringify(response.data.user));
+        } else {
+          // Backend says not authenticated, clear everything
           setUser(null);
+          navigate("/unauthorized");
+          setIsAuthenticated(false);
           localStorage.removeItem("user");
         }
-        // For network errors or other issues, don't clear auth state
+      } catch (error) {
+        console.error('Auth verification failed:', error);
+
+        // Only clear auth on actual auth failures (401/403)
+        if (error.response?.status === 401 || error.response?.status === 403) {
+          setUser(null);
+          navigate("/unauthorized");
+          setIsAuthenticated(false);
+          setLoading(false);
+          localStorage.removeItem("user");
+        }
+
       } finally {
         setLoading(false);
       }
     };
+    checkAuth();
+  }, [location.pathname]);
 
-    // FIXED: Only run auth check if we're not on public pages
-    const publicPaths = ['/', '/login', '/register', '/about', '/forgotpassword', '/resetpassword', '/unauthorized'];
-    const currentPath = window.location.pathname;
-
-    if (publicPaths.includes(currentPath)) {
-      // On public pages, just check localStorage without making API calls
-      const savedUser = localStorage.getItem("user");
-      if (savedUser) {
-        try {
-          const userData = JSON.parse(savedUser);
-          setUser(userData);
-          setIsAuthenticated(true);
-        } catch (parseError) {
-          localStorage.removeItem("user");
-        }
-      }
-      setLoading(false);
-    } else {
-      // On protected pages, run full auth check
-      checkAuth();
-    }
-  }, []);
-
-  // Method to manually clear auth state
-  const clearAuth = () => {
-    setUser(null);
-    setIsAuthenticated(false);
-    localStorage.removeItem("user");
-  };
 
   // Method to set user data (for login)
   const setUserData = (userData) => {
@@ -93,11 +76,11 @@ export const UserContextProvider = ({ children }) => {
   return (
     <UserContext.Provider value={{
       user,
-      setUser: setUserData, // FIXED: Use the wrapper function
+      setUser: setUserData,
       isAuthenticated,
       setIsAuthenticated,
       loading,
-      clearAuth
+
     }}>
       {children}
     </UserContext.Provider>

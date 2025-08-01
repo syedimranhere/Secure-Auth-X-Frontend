@@ -2,32 +2,22 @@
 import { LogOut } from 'lucide-react';
 import { UseUserContext } from '../context/UserContext.jsx';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth.js'; // FIXED: Import useAuth
-import API from '../../utils/axiosInstance.js';
+import axios from 'axios';
+import { useEffect } from 'react';
 
 export const Dashboard = () => {
     const navigate = useNavigate();
-    const { user, clearAuth } = UseUserContext();
-    const { loading } = useAuth(); // FIXED: Use useAuth hook here since this is a protected route
+    const { user, loading } = UseUserContext();
 
     if (loading) {
         return (
-            <div
-                className="h-screen w-screen flex items-center justify-center bg-cover bg-center relative"
-                style={{
-                    backgroundImage: "url('/your-background.jpg')",
-                }}
-            >
-                <div className="absolute inset-0 bg-black bg-opacity-60 backdrop-blur-sm"></div>
-
-                <h1 className="text-white text-3xl z-10 font-semibold tracking-wide">
-                    Loading Dashboard....
-                </h1>
+            <div className="h-screen w-screen flex items-center justify-center bg-black">
+                <div className="text-white text-3xl font-semibold tracking-wide">
+                    Loading Dashboard...
+                </div>
             </div>
         );
     }
-
-    // FIXED: This check is now redundant since useAuth handles it
     if (!user) {
         return (
             <div className="h-screen w-screen flex items-center justify-center bg-black">
@@ -48,19 +38,13 @@ export const Dashboard = () => {
         navigate("/myprofile")
     }
 
-    const goToAbout = () => {
-        navigate('/about');
-    };
-
     const onLogout = async () => {
         try {
-            await API.post("/user/logout");
+            await axios.post("/api/v1/user/logout");
         } catch (error) {
             console.error("Logout failed:", error?.response?.data || error.message);
         } finally {
-            // FIXED: Use clearAuth method from context
-            clearAuth();
-            navigate("/login");
+            navigate("/login", { replace: true });
         }
     }
 
@@ -130,7 +114,7 @@ export const Dashboard = () => {
                             </p>
 
                             <p className="text-gray-100 text-sm md:text-base leading-relaxed">
-                                <strong className="text-cyan-300 font-medium">Refresh tokens auto-rotate every 5 minutes </strong>,
+                                <strong className="text-cyan-300 font-medium">Refresh tokens auto-rotate every 5 minutes via interceptors</strong>,
                                 so even advanced interceptors can't reuse or replay them. Every session is isolated and short-lived by design.
                             </p>
                         </div>
