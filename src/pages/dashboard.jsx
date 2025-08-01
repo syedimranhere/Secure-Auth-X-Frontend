@@ -1,48 +1,48 @@
-import React, { useEffect } from 'react';
 import { LogOut } from 'lucide-react';
 import { UseUserContext } from '../context/UserContext.jsx';
 import { useNavigate } from 'react-router-dom';
-import axios from "axios"
+import { useAuth } from '../hooks/useAuth.js';
 export const Dashboard = () => {
     const navigate = useNavigate();
-    useEffect(() => {
-        const verifyAccess = async () => {
-            try {
-                const x = await axios.post('/api/v1/user/get-access');
-                console.log(x.data)
+    const { user } = UseUserContext();
+    const { loading } = useAuth();
 
-                // You can optionally set user state here
-            } catch (err) {
-                navigate('/unauthorized'); // Redirect if check fails
-                console.log("No Joke")
-            }
-        };
-        verifyAccess();
-    }, [navigate]);
+    if (loading) {
+        return (
+            <div
+                className="h-screen w-screen flex items-center justify-center bg-cover bg-center relative"
+                style={{
+                    backgroundImage: "url('/your-background.jpg')", // Place your image in public folder
+                }}
+            >
+                <div className="absolute inset-0 bg-black bg-opacity-60 backdrop-blur-sm"></div>
+
+                <h1 className="text-white text-3xl z-10 font-semibold tracking-wide">
+                    Loading Dashboard....
+                </h1>
+            </div>
+        );
+    }
     const handleME = () => {
         navigate("/myprofile")
     }
-    const { user } = UseUserContext();
-
-    const onLogout = async () => {
-        // Handle logout: Clear tokens, context, etc.
-        try {
-            1
-            const resp = await axios.post("api/v1/user/logout")
-
-            console.log("Req made mate")
-            navigate("/login")
-        } catch (error) {
-            console.log("Error in logout")
-        }
-    };
     const goToAbout = () => {
         navigate('/about');
     };
+    const onLogout = async () => {
+        try {
+            await API.post("/user/logout");
+        } catch (error) {
+            console.error("Logout failed:", error?.response?.data || error.message);
 
+        } finally {
+            navigate("/login");
+        }
+
+    }
     return (
         <div className="relative min-h-screen bg-black overflow-hidden">
-            {/* 🖼️ Background Image with Blur */}
+
             <div className="absolute inset-0 z-0">
                 <img
                     src="/assets/anotherbg.jpg"
@@ -75,7 +75,7 @@ export const Dashboard = () => {
                             className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg transition duration-200"
                         >
                             <LogOut className="w-4 h-4" />
-                            <span>Profile</span>
+                            <span>My Profile</span>
                         </button>
                         <button
                             onClick={onLogout}
@@ -87,24 +87,33 @@ export const Dashboard = () => {
                     </div>
                 </header>
                 {/* Main Content */}
-                <main className="p-8 text-white flex-grow">
-                    <p className="text-gray-300 mb-4">
-                        This page is kept simple on purpose, as the main focus of this project was to demonstrate a secure and reliable authentication system.
-                    </p>
-                    <p className="text-gray-100">
-                        Try registering a new account, testing the login process, and explore features like <strong>OTP verification via "Forgot Password"</strong>.
-                    </p>
+                <main className="p-6 md:p-10 text-white flex-grow font-sans">
+                    <div className="max-w-3xl mx-auto space-y-6">
+
+                        <p className="text-gray-300 text-base md:text-lg leading-relaxed">
+                            This page is intentionally kept minimal to emphasize the core objective — building a <strong className="text-white font-semibold">secure and reliable authentication system</strong> that reflects real-world standards.
+                        </p>
+
+                        <div className="bg-white/5 border border-cyan-700 rounded-xl p-5 md:p-6 shadow-lg backdrop-blur-sm space-y-3">
+                            <p className="text-gray-100 text-sm md:text-base leading-relaxed">
+                                Try registering a new account, test the login flow, and explore key features like
+                                <strong className="text-cyan-300 font-medium"> OTP verification via "Forgot Password"</strong>.
+                            </p>
+
+                            <p className="text-gray-100 text-sm md:text-base leading-relaxed">
+                                🔐 <strong className="text-cyan-300 font-medium">Session hijacking prevention</strong> is built-in: even if a token is intercepted,
+                                it becomes unusable on another browser or device.
+                            </p>
+
+                            <p className="text-gray-100 text-sm md:text-base leading-relaxed">
+                                <strong className="text-cyan-300 font-medium">Refresh tokens auto-rotate  every 5 minutes </strong>,
+                                so even advanced interceptors can't reuse or replay them. Every session is isolated and short-lived by design.
+                            </p>
+                        </div>
+
+                    </div>
                 </main>
 
-                {/* Bottom About Button */}
-                <div className="w-full flex justify-center mb-2">
-                    <button
-                        onClick={goToAbout}
-                        className="px-2 py-2 bg-gray-600 hover:bg-blue-300 text-white rounded-xl transition-all duration-200"
-                    >
-                        About
-                    </button>
-                </div>
             </div>
         </div>
     );

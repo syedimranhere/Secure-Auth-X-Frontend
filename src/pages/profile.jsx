@@ -1,29 +1,16 @@
 
 import { User, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
 import { UseUserContext } from '../context/UserContext';
-import axios from "axios"
+import { useAuth } from '../hooks/useAuth';
+
 
 export default function Profile() {
+    const navigate = useNavigate();
 
     const { user } = UseUserContext()
+    const { loading } = useAuth()
 
-    const navigate = useNavigate();
-    useEffect(() => {
-        const verifyAccess = async () => {
-            try {
-                const x = await axios.post('/api/v1/user/get-access');
-                console.log(x.data)
-
-                // You can optionally set user state here
-            } catch (err) {
-                navigate('/unauthorized'); // Redirect if check fails
-                console.log("No Joke")
-            }
-        };
-        verifyAccess();
-    }, [navigate]);
     const HandleMe = () => {
         navigate("/dashboard")
     }
@@ -56,7 +43,7 @@ export default function Profile() {
                     <button
                         onClick={HandleMe}
                         // onClick={handleDashboardClick}
-                        className="flex items-center space-x-2 px-4 py-2 bg-gray-600 hover:bg-blue-300 text-white rounded-xl transition-all duration-200"
+                        className="flex items-center space-x-2 px-4 py-2 bg-gray-600 hover:bg-blue-700 text-white rounded-xl transition-all duration-200"
                     >
                         <ArrowLeft className="w-4 h-4" />
                         <span>Dashboard</span>
@@ -70,7 +57,7 @@ export default function Profile() {
 
                         {/* Profile Icon */}
                         <div className="flex justify-center mb-8">
-                            <div className="w-20 h-20 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center shadow-lg">
+                            <div className="w-20 h-20 bg-gradient-to-r from-gray-900 to-gray-500 rounded-full flex items-center justify-center shadow-lg">
                                 <User className="w-10 h-10 text-white" />
                             </div>
                         </div>
