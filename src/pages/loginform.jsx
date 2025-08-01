@@ -51,7 +51,7 @@ export default function Login() {
         setLoading(true);
 
         try {
-            const response = await axios.post("/api/v1/user/login", {
+            const response = await axios.post("https://secure-auth-x-backend.vercel.app/api/v1/user/login", {
                 EmailorUsername: email,
                 Password: pass,
             });
@@ -99,7 +99,7 @@ export default function Login() {
                 <nav className="flex justify-between items-center px-8 py-4 bg-transparent">
                     <Link to="/" className="text-white text-2xl font-bold tracking-wider">
                         <span className="text-white">Secure</span>
-                        <span className="text-[#00FFD1]">A</span>
+                        <span className="text-[#00FFD1]">A</span>q1
                         <span className="text-white">uth</span>
                         <span className="text-[#0773df]">X</span>
                     </Link>

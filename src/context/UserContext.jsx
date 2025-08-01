@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useEffect, createContext, useState, useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-// import API from '../../utils/axiosInstance';
+import API from '../../utils/axiosInstance';
 
 export const UserContext = createContext();
 export const UseUserContext = () => useContext(UserContext);
@@ -31,7 +31,7 @@ export const UserContextProvider = ({ children }) => {
         }
 
         // Then verify with backend
-        const response = await axios.get('/api/v1/user/verify-access');
+        const response = await API.get('/user/verify-access');
 
         if (response.data.success && response.data.user) {
           // Update with fresh data from backend

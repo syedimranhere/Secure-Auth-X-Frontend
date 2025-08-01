@@ -3,7 +3,6 @@ import { LogOut } from 'lucide-react';
 import { UseUserContext } from '../context/UserContext.jsx';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useEffect } from 'react';
 
 export const Dashboard = () => {
     const navigate = useNavigate();

@@ -1,10 +1,10 @@
 import axios from "axios";
 
+const BASE = "https://secure-auth-x-backend.vercel.app";
 const API = axios.create({
-  baseURL: "/api/v1",
-  withCredentials: true, // Ensures cookies are sent with requests
+  baseURL: `${BASE}/api/v1`,
+  withCredentials: true,
 });
-
 API.interceptors.response.use(
   (res) => res,
   async (err) => {
@@ -28,6 +28,9 @@ API.interceptors.response.use(
 
         // Clear any cached user data
         localStorage.removeItem("user");
+        await API.post("/user/clearcookie", {
+          withCredentials: true,
+        });
 
         // Only redirect if not already on login page
         if (window.location.pathname !== "/login") {
