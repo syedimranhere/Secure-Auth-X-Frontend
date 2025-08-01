@@ -43,7 +43,7 @@ export default function Register() {
         };
 
         try {
-            const response = await axios.post("https://secure-auth-x-backend.vercel.app/api/v1/user/register", data);
+            const response = await axios.post("/api/v1/user/register", data);
             console.log("Registration successful:", response.data);
 
             setSuccessMessage("Account created! Redirecting to login...");

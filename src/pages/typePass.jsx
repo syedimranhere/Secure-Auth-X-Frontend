@@ -35,7 +35,7 @@ export default function ResetPassword() {
         try {
             setLoading(true);
             setMessage("Resetting Password...");
-            const resp = await axios.post("/api/v1/user/reset-password", { password: confirm });
+            const resp = await axios.post("/api/v1/user/reset-password");
             if (resp?.data?.success) {
                 setMessage("Reset Successful | Redirecting");
                 setTimeout(() => navigate("/login"), 3000);

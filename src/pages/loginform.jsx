@@ -51,7 +51,7 @@ export default function Login() {
         setLoading(true);
 
         try {
-            const response = await axios.post("https://secure-auth-x-backend.vercel.app/api/v1/user/login", {
+            const response = await axios.post("/api/v1/user/login", {
                 EmailorUsername: email,
                 Password: pass,
             });
