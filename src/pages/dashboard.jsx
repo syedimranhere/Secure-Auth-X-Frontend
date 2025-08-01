@@ -2,18 +2,20 @@
 import { LogOut } from 'lucide-react';
 import { UseUserContext } from '../context/UserContext.jsx';
 import { useNavigate } from 'react-router-dom';
-import API from '../../utils/axiosInstance.js'; // FIXED: Added missing import
+import { useAuth } from '../hooks/useAuth.js'; // FIXED: Import useAuth
+import API from '../../utils/axiosInstance.js';
 
 export const Dashboard = () => {
     const navigate = useNavigate();
-    const { user, loading, setUser, setIsAuthenticated } = UseUserContext(); // FIXED: Added setUser and setIsAuthenticated
+    const { user, clearAuth } = UseUserContext();
+    const { loading } = useAuth(); // FIXED: Use useAuth hook here since this is a protected route
 
     if (loading) {
         return (
             <div
                 className="h-screen w-screen flex items-center justify-center bg-cover bg-center relative"
                 style={{
-                    backgroundImage: "url('/your-background.jpg')", // Place your image in public folder
+                    backgroundImage: "url('/your-background.jpg')",
                 }}
             >
                 <div className="absolute inset-0 bg-black bg-opacity-60 backdrop-blur-sm"></div>
@@ -25,7 +27,7 @@ export const Dashboard = () => {
         );
     }
 
-    // FIXED: Added check for user data
+    // FIXED: This check is now redundant since useAuth handles it
     if (!user) {
         return (
             <div className="h-screen w-screen flex items-center justify-center bg-black">
@@ -56,10 +58,8 @@ export const Dashboard = () => {
         } catch (error) {
             console.error("Logout failed:", error?.response?.data || error.message);
         } finally {
-            // FIXED: Clear context state and localStorage on logout
-            setUser(null);
-            setIsAuthenticated(false);
-            localStorage.removeItem("user");
+            // FIXED: Use clearAuth method from context
+            clearAuth();
             navigate("/login");
         }
     }
@@ -81,7 +81,7 @@ export const Dashboard = () => {
                 {/* Header */}
                 <header className="flex justify-between items-center px-8 py-4 bg-transparent border-b border-gray-800">
                     <div className="flex items-center space-x-6">
-                        <div className="text-2xl font-bold tracking-wider"> {/* FIXED: Removed backtick */}
+                        <div className="text-2xl font-bold tracking-wider">
                             <span className="text-white">Secure</span>
                             <span className="text-[#00FFD1]">A</span>
                             <span className="text-white">uth</span>

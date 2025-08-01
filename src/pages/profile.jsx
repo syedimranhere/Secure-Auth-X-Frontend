@@ -2,17 +2,12 @@
 import { User, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { UseUserContext } from '../context/UserContext';
-import { useEffect } from 'react'; // FIXED: Added missing import
+import { useAuth } from '../hooks/useAuth.js'; // FIXED: Import useAuth
 
 export default function Profile() {
-    const { user, loading, isAuthenticated } = UseUserContext();
+    const { user } = UseUserContext();
+    const { loading } = useAuth(); // FIXED: Use useAuth hook since this is a protected route
     const navigate = useNavigate();
-
-    useEffect(() => {
-        if (!loading && !isAuthenticated) {
-            navigate("/login");
-        }
-    }, [loading, isAuthenticated, navigate]); // FIXED: Added navigate to dependency array
 
     const HandleMe = () => {
         navigate("/dashboard")
@@ -26,7 +21,7 @@ export default function Profile() {
         );
     }
 
-    // FIXED: Added check for user data
+    // FIXED: This check is now redundant since useAuth handles it
     if (!user) {
         return (
             <div className="min-h-screen bg-black text-white flex items-center justify-center">
