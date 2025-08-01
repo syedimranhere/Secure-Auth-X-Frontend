@@ -1,19 +1,48 @@
-
+// profile.jsx
 import { User, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { UseUserContext } from '../context/UserContext';
-import { useAuth } from '../hooks/useAuth';
-
+import { useEffect } from 'react'; // FIXED: Added missing import
 
 export default function Profile() {
+    const { user, loading, isAuthenticated } = UseUserContext();
     const navigate = useNavigate();
 
-    const { user } = UseUserContext()
-    // const { loading } = useAuth()
+    useEffect(() => {
+        if (!loading && !isAuthenticated) {
+            navigate("/login");
+        }
+    }, [loading, isAuthenticated, navigate]); // FIXED: Added navigate to dependency array
 
     const HandleMe = () => {
         navigate("/dashboard")
     }
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-black text-white flex items-center justify-center">
+                Loading your profile...
+            </div>
+        );
+    }
+
+    // FIXED: Added check for user data
+    if (!user) {
+        return (
+            <div className="min-h-screen bg-black text-white flex items-center justify-center">
+                <div className="text-center">
+                    <p className="mb-4">Unable to load profile data</p>
+                    <button
+                        onClick={() => navigate("/login")}
+                        className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg"
+                    >
+                        Back to Login
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="relative min-h-screen bg-black overflow-hidden">
             {/* Background Image with Blur */}
@@ -39,10 +68,8 @@ export default function Profile() {
                         </div>
                     </div>
 
-
                     <button
                         onClick={HandleMe}
-                        // onClick={handleDashboardClick}
                         className="flex items-center space-x-2 px-4 py-2 bg-gray-600 hover:bg-blue-700 text-white rounded-xl transition-all duration-200"
                     >
                         <ArrowLeft className="w-4 h-4" />
@@ -62,7 +89,7 @@ export default function Profile() {
                             </div>
                         </div>
 
-                        <h2 className="text-3xl font-bold mb-8 text-center">Your Profile </h2>
+                        <h2 className="text-3xl font-bold mb-8 text-center">Your Profile</h2>
 
                         <div className="space-y-6">
                             <div>
@@ -83,7 +110,6 @@ export default function Profile() {
                                 <label className="block text-sm font-semibold text-gray-300 mb-2">Email</label>
                                 <div className="bg-white/20 backdrop-blur-md px-4 py-3 rounded-lg text-lg border border-white/20">
                                     {user.email}
-
                                 </div>
                             </div>
                         </div>

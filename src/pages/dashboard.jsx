@@ -1,11 +1,12 @@
+// Dashboard.jsx
 import { LogOut } from 'lucide-react';
 import { UseUserContext } from '../context/UserContext.jsx';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth.js';
+import API from '../../utils/axiosInstance.js'; // FIXED: Added missing import
+
 export const Dashboard = () => {
     const navigate = useNavigate();
-    const { user } = UseUserContext();
-    const { loading } = useAuth();
+    const { user, loading, setUser, setIsAuthenticated } = UseUserContext(); // FIXED: Added setUser and setIsAuthenticated
 
     if (loading) {
         return (
@@ -23,23 +24,46 @@ export const Dashboard = () => {
             </div>
         );
     }
+
+    // FIXED: Added check for user data
+    if (!user) {
+        return (
+            <div className="h-screen w-screen flex items-center justify-center bg-black">
+                <div className="text-center text-white">
+                    <p className="mb-4">Unable to load user data</p>
+                    <button
+                        onClick={() => navigate("/login")}
+                        className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg"
+                    >
+                        Back to Login
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
     const handleME = () => {
         navigate("/myprofile")
     }
+
     const goToAbout = () => {
         navigate('/about');
     };
+
     const onLogout = async () => {
         try {
             await API.post("/user/logout");
         } catch (error) {
             console.error("Logout failed:", error?.response?.data || error.message);
-
         } finally {
+            // FIXED: Clear context state and localStorage on logout
+            setUser(null);
+            setIsAuthenticated(false);
+            localStorage.removeItem("user");
             navigate("/login");
         }
-
     }
+
     return (
         <div className="relative min-h-screen bg-black overflow-hidden">
 
@@ -57,7 +81,7 @@ export const Dashboard = () => {
                 {/* Header */}
                 <header className="flex justify-between items-center px-8 py-4 bg-transparent border-b border-gray-800">
                     <div className="flex items-center space-x-6">
-                        <div className="t`ext-2xl font-bold tracking-wider">
+                        <div className="text-2xl font-bold tracking-wider"> {/* FIXED: Removed backtick */}
                             <span className="text-white">Secure</span>
                             <span className="text-[#00FFD1]">A</span>
                             <span className="text-white">uth</span>
@@ -106,7 +130,7 @@ export const Dashboard = () => {
                             </p>
 
                             <p className="text-gray-100 text-sm md:text-base leading-relaxed">
-                                <strong className="text-cyan-300 font-medium">Refresh tokens auto-rotate  every 5 minutes </strong>,
+                                <strong className="text-cyan-300 font-medium">Refresh tokens auto-rotate every 5 minutes </strong>,
                                 so even advanced interceptors can't reuse or replay them. Every session is isolated and short-lived by design.
                             </p>
                         </div>
