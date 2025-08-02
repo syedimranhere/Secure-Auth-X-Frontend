@@ -1,26 +1,24 @@
-import axios from "axios";
-
-const BASE = import.meta.env.VITE_API_BASE_URL;
-const API = axios.create({
-  baseURL: `${BASE}/api/v1`,
-  withCredentials: true,
-});
-
 API.interceptors.response.use(
   (res) => res,
   async (err) => {
     const originalRequest = err.config;
 
-    // Handle 406: No active session or unacceptable auth state
+    // 🔐 Check for 406 - Unacceptable / Unauthorized access level
     if (err.response?.status === 406) {
-      console.warn("No active session. Redirecting to /unauth...");
+      console.error("406 error: Unauthorized access. Redirecting...");
+
+      // Optional cleanup
+      localStorage.removeItem("user");
+
+      // Stop further requests and redirect
       if (window.location.pathname !== "/unauthorized") {
         window.location.href = "/unauthorized";
       }
-      return Promise.reject(err);
+
+      return Promise.reject(err); // ⛔ STOP: do not retry anything
     }
 
-    // Handle 401: Access token expired, attempt refresh
+    // 🔄 Token Refresh Attempt on 401
     if (err.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
@@ -46,7 +44,7 @@ API.interceptors.response.use(
         try {
           await API.post("/user/logout", { withCredentials: true });
         } catch (logoutErr) {
-          console.warn("Silent logout failure.");
+          console.warn("Logout during refresh fail failed silently.");
         }
 
         localStorage.removeItem("user");
@@ -59,8 +57,6 @@ API.interceptors.response.use(
       }
     }
 
-    return Promise.reject(err);
+    return Promise.reject(err); // All other errors
   }
 );
-
-export default API;
