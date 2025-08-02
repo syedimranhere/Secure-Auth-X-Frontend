@@ -1,6 +1,6 @@
 
 import { useEffect, createContext, useState, useContext } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import API from '../../utils/axiosInstance';
 
 export const UserContext = createContext();

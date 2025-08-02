@@ -1,3 +1,10 @@
+import axios from "axios";
+
+const BASE = import.meta.env.VITE_API_BASE_URL;
+const API = axios.create({
+  baseURL: `${BASE}/api/v1`,
+  withCredentials: true,
+});
 API.interceptors.response.use(
   (res) => res,
   async (err) => {
@@ -60,3 +67,5 @@ API.interceptors.response.use(
     return Promise.reject(err); // All other errors
   }
 );
+
+export default API;
