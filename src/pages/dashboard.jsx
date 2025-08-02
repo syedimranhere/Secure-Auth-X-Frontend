@@ -45,10 +45,6 @@ export const Dashboard = () => {
         } catch (error) {
             console.error("Logout failed:", error?.response?.data || error.message);
         } finally {
-
-            await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/v1/user/logout`, {
-                withCredentials: true,
-            });
             navigate("/login", { replace: true });
         }
     }
