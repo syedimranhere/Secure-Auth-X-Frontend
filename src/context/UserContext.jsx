@@ -10,7 +10,7 @@ export const UserContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const location = useLocation();
   useEffect(() => {
     const checkAuth = async () => {
@@ -28,7 +28,9 @@ export const UserContextProvider = ({ children }) => {
         }
 
         // Verify from backend
-        const res = await API.get("/user/verify-access");
+        const res = await API.get("/user/verify-access", {
+          withCredentials: true,
+        });
         if (res.data.success && res.data.user) {
           setUser(res.data.user);
           setIsAuthenticated(true);
