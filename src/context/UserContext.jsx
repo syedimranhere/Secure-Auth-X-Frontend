@@ -15,7 +15,6 @@ export const UserContextProvider = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        // Load cached user from localStorage
         const savedUser = localStorage.getItem("user");
         if (savedUser) {
           try {
@@ -28,49 +27,19 @@ export const UserContextProvider = ({ children }) => {
           }
         }
 
-        // Verify user from backend
-        const res = await API.get("/user/verify-access", { withCredentials: true });
-
+        // Verify from backend
+        const res = await API.get("/user/verify-access");
         if (res.data.success && res.data.user) {
           setUser(res.data.user);
           setIsAuthenticated(true);
           localStorage.setItem("user", JSON.stringify(res.data.user));
-          return;
         }
-
-        throw new Error("User verification failed unexpectedly");
-
       } catch (error) {
-        const status = error.response?.status;
-
-        // If token is expired, attempt refresh
-        if (status === 401 || status === 403) {
-          try {
-            console.log("Attempting token refresh...");
-            const refresh = await API.get("/user/refresh-token", { withCredentials: true });
-
-            if (refresh.data.success) {
-              const retry = await API.get("/user/verify-access", { withCredentials: true });
-
-              if (retry.data.success && retry.data.user) {
-                setUser(retry.data.user);
-                setIsAuthenticated(true);
-                localStorage.setItem("user", JSON.stringify(retry.data.user));
-                return;
-              }
-            }
-
-          } catch (refreshError) {
-            console.error("Token refresh failed:", refreshError);
-          }
-        }
-
-        // Final fallback: logout and redirect
-        console.warn("Authentication failed. Logging out.");
-        localStorage.removeItem("user");
+        console.error("User verification failed:", error?.response?.data || error.message);
+        setIsAuthenticated(true);
         setUser(null);
-        setIsAuthenticated(false);
-        navigate("/unauthorized");
+        localStorage.removeItem("user");
+        // DO NOT redirect or refresh here — let the Axios interceptor do that
       } finally {
         setLoading(false);
       }
@@ -78,7 +47,6 @@ export const UserContextProvider = ({ children }) => {
 
     checkAuth();
   }, [location.pathname]);
-
 
 
   // Method to set user data (for login)
