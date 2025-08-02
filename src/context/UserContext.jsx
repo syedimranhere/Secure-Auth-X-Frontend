@@ -15,62 +15,70 @@ export const UserContextProvider = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        // First, try to get cached user data
+        // Load cached user from localStorage
         const savedUser = localStorage.getItem("user");
-        let cachedUser = null;
         if (savedUser) {
           try {
-            cachedUser = JSON.parse(savedUser);
-            // Set cached data immediately to prevent redirect
+            const cachedUser = JSON.parse(savedUser);
             setUser(cachedUser);
             setIsAuthenticated(true);
-          } catch (parseError) {
-            console.error('Failed to parse saved user data:', parseError);
+          } catch (e) {
+            console.warn("Invalid cached user data. Clearing.");
             localStorage.removeItem("user");
           }
         }
 
-        // Then verify with backend
-        const response = await API.get('/user/verify-access', {
-          withCredentials: true,
-        });
+        // Verify user from backend
+        const res = await API.get("/user/verify-access", { withCredentials: true });
 
-        if (response.data.success && response.data.user) {
-          // Update with fresh data from backend
-          setUser(response.data.user);
+        if (res.data.success && res.data.user) {
+          setUser(res.data.user);
           setIsAuthenticated(true);
-          console.log('Auth verified:', response.data.user);
-          localStorage.setItem("user", JSON.stringify(response.data.user));
-        } else {
-          // Backend says not authenticated, clear everything
-          setUser(null);
-          navigate("/unauthorized");
-          setIsAuthenticated(false);
-          localStorage.removeItem("user");
+          localStorage.setItem("user", JSON.stringify(res.data.user));
+          return;
         }
+
+        throw new Error("User verification failed unexpectedly");
+
       } catch (error) {
-        console.error('Auth verification failed:', error);
+        const status = error.response?.status;
 
-        // Only clear auth on actual auth failures (401/403)
-        if (error.response?.status === 401 || error.response?.status === 403) {
-          setUser(null);
-          navigate("/unauthorized");
-          setIsAuthenticated(false);
-          setLoading(false);
-          localStorage.removeItem("user");
+        // If token is expired, attempt refresh
+        if (status === 401 || status === 403) {
+          try {
+            console.log("Attempting token refresh...");
+            const refresh = await API.get("/user/refresh-token", { withCredentials: true });
+
+            if (refresh.data.success) {
+              const retry = await API.get("/user/verify-access", { withCredentials: true });
+
+              if (retry.data.success && retry.data.user) {
+                setUser(retry.data.user);
+                setIsAuthenticated(true);
+                localStorage.setItem("user", JSON.stringify(retry.data.user));
+                return;
+              }
+            }
+
+          } catch (refreshError) {
+            console.error("Token refresh failed:", refreshError);
+          }
         }
-        setUser(null);
-        navigate("/unauthorized");
-        setIsAuthenticated(false);
-        setLoading(false);
-        localStorage.removeItem("user");
 
+        // Final fallback: logout and redirect
+        console.warn("Authentication failed. Logging out.");
+        localStorage.removeItem("user");
+        setUser(null);
+        setIsAuthenticated(false);
+        navigate("/unauthorized");
       } finally {
         setLoading(false);
       }
     };
+
     checkAuth();
   }, [location.pathname]);
+
 
 
   // Method to set user data (for login)
