@@ -54,6 +54,8 @@ export default function Login() {
             const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/v1/user/login`, {
                 EmailorUsername: email,
                 Password: pass,
+            }, {
+                withCredentials: true,
             });
 
             if (response?.data?.success && response?.data?.user) {

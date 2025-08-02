@@ -31,7 +31,9 @@ export const UserContextProvider = ({ children }) => {
         }
 
         // Then verify with backend
-        const response = await API.get('/user/verify-access');
+        const response = await API.get('/user/verify-access', {
+          withCredentials: true,
+        });
 
         if (response.data.success && response.data.user) {
           // Update with fresh data from backend
