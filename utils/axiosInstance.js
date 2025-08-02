@@ -28,7 +28,7 @@ API.interceptors.response.use(
 
         // Clear any cached user data
         localStorage.removeItem("user");
-        await API.post("/user/clearcookie", {
+        await API.post("/user/logout", {
           withCredentials: true,
         });
 

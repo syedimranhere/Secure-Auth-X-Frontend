@@ -59,6 +59,11 @@ export const UserContextProvider = ({ children }) => {
           setLoading(false);
           localStorage.removeItem("user");
         }
+        setUser(null);
+        navigate("/unauthorized");
+        setIsAuthenticated(false);
+        setLoading(false);
+        localStorage.removeItem("user");
 
       } finally {
         setLoading(false);
