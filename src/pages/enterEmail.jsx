@@ -25,7 +25,7 @@ export default function ForgetPass1() {
         setLoading(true);
         setMessage("");
         try {
-            const response = await axios.post("/api/v1/user/send-otp", { email });
+            const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/v1/user/send-otp`, { email });
             if (response?.data?.success) {
                 setMessage("OTP has been sent to your email.");
                 setOtpForm(true);
