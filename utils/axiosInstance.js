@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE = "https://secure-auth-x-backend.vercel.app";
+const BASE = import.meta.env.VITE_API_BASE_URL;
 const API = axios.create({
   baseURL: `${BASE}/api/v1`,
   withCredentials: true,

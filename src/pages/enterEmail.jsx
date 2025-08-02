@@ -48,7 +48,7 @@ export default function ForgetPass1() {
         if (!email) return;
         setMessage("Resending OTP...");
         try {
-            const response = await axios.post("/api/v1/user/send-otp", { email });
+            const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/v1/user/send-otp`, { email });
             if (response?.data?.success) {
                 setMessage("OTP resent successfully.");
                 setOtpForm(true);
@@ -62,7 +62,7 @@ export default function ForgetPass1() {
     const handleOTP = async () => {
         setMessage(""); // Clear previous messages
         try {
-            const response = await axios.post("/api/v1/user/verifyotp", { otp });
+            const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/v1/user/verifyotp`, { otp });
 
             if (response?.data?.success) {
                 navigate("/resetpassword");
