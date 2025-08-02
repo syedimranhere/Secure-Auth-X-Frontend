@@ -35,6 +35,7 @@ export const UserContextProvider = ({ children }) => {
           setUser(res.data.user);
           setIsAuthenticated(true);
           localStorage.setItem("user", JSON.stringify(res.data.user));
+          console.log("User verified:", res.data.user);
         }
       } catch (error) {
         console.error("User verification failed:", error?.response?.data || error.message);
