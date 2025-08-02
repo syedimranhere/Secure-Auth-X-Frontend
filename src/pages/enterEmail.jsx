@@ -26,7 +26,9 @@ export default function ForgetPass1() {
         setMessage("");
 
         try {
-            const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/v1/user/send-otp`, { email });
+            const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/v1/user/send-otp`, { email }, {
+                withCredentials: true,
+            });
             if (response?.data?.success) {
                 setMessage("OTP has been sent to your email.");
                 setOtpForm(true);
@@ -49,7 +51,9 @@ export default function ForgetPass1() {
         if (!email) return;
         setMessage("Resending OTP...");
         try {
-            const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/v1/user/send-otp`, { email });
+            const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/v1/user/send-otp`, { email }, {
+                withCredentials: true,
+            });
             if (response?.data?.success) {
                 setMessage("OTP resent successfully.");
                 setOtpForm(true);
@@ -63,7 +67,9 @@ export default function ForgetPass1() {
     const handleOTP = async () => {
         setMessage(""); // Clear previous messages
         try {
-            const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/v1/user/verifyotp`, { otp });
+            const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/v1/user/verifyotp`, { otp }, {
+                withCredentials: true,
+            });
 
             if (response?.data?.success) {
                 navigate("/resetpassword");
