@@ -10,38 +10,58 @@ API.interceptors.response.use(
   async (err) => {
     const originalRequest = err.config;
 
-    // Only attempt refresh on 401 errors and avoid infinite loops
     if (err.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
-        // FIXED: Use correct refresh endpoint from your routes
-        await API.get("/user/refresh", {
+        const refreshResponse = await API.get("/user/refresh", {
           withCredentials: true,
         });
+
         console.log("Token refreshed successfully");
 
-        // Retry the original request after successful token refresh
+        // Optional: Attach new access token (only if using header-based auth)
+        const newAccessToken = refreshResponse.data?.accessToken;
+        if (newAccessToken) {
+          API.defaults.headers.common[
+            "Authorization"
+          ] = `Bearer ${newAccessToken}`;
+          originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+        }
+
         return API(originalRequest);
       } catch (refreshErr) {
         console.error("Token refresh failed. Redirecting to login...");
 
-        // Clear any cached user data
-        localStorage.removeItem("user");
-        await API.post("/user/logout", {
-          withCredentials: true,
-        });
+        try {
+          await API.post("/user/logout", { withCredentials: true });
+        } catch (logoutErr) {
+          console.warn("Logout during refresh fail failed silently.");
+        }
 
-        // Only redirect if not already on login page
+        localStorage.removeItem("user");
+
         if (window.location.pathname !== "/login") {
           window.location.href = "/login";
         }
-        alert("Session expired. Please log in again.");
+
         return Promise.reject(refreshErr);
       }
     }
 
     return Promise.reject(err);
+  }
+);
+API.interceptors.request.use(
+  (config) => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user && user.accessToken) {
+      config.headers["Authorization"] = `Bearer ${user.accessToken}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
 );
 
