@@ -1,15 +1,14 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { FaEnvelope, FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
-
-
+import { FaEnvelope, FaGithub, FaLinkedin } from "react-icons/fa";
+import { FaXTwitter } from 'react-icons/fa6';
 export default function About() {
     return (
         <div className="relative min-h-screen w-full overflow-hidden text-white font-sans">
             {/* 🖼️ Background */}
             <div className="absolute inset-0">
                 <img
-                    src="/assets/city2(2).webp"
+                    src="/assets/aboutbg.webp"
                     alt="Background"
                     className="w-full h-full object-cover"
                 />
@@ -113,7 +112,8 @@ export default function About() {
                         rel="noopener noreferrer"
                         className="hover:text-[#282f4c] transition hover:scale-140"
                     >
-                        <FaTwitter />
+                        <FaXTwitter />
+
                     </a>
                 </motion.div>
             </div>
