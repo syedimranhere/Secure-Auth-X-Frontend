@@ -84,7 +84,6 @@ export default function ForgetPass1() {
         }
     };
 
-
     return (
         <div className="relative min-h-screen w-full bg-black">
             {/* Background Blur Layer */}
