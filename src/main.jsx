@@ -39,6 +39,12 @@ createRoot(document.getElementById('root')).render(
         <Route path="/register" element={<Register />} />
         <Route path="/unauthorized" element={<Unauth />} />
         <Route path="*" element={<NotFound />} />
+
+
+        {/* Protected layout route */}
+        <Route path="/*" element={<ProtectedLayout />} />
+
+
       </Routes>
     </BrowserRouter>
   </StrictMode>
