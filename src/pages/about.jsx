@@ -5,7 +5,7 @@ import { FaXTwitter } from 'react-icons/fa6';
 export default function About() {
     return (
         <div className="relative min-h-screen w-full overflow-hidden text-white font-sans">
-            {/* 🖼️ Background */}
+            {/* Background */}
             <div className="absolute inset-0">
                 <img
                     src="/assets/aboutbg.webp"
@@ -15,7 +15,7 @@ export default function About() {
                 <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
             </div>
 
-            {/* 🧭 Navbar */}
+            {/*  Navbar */}
             <nav className="flex justify-between items-center px-8 py-4 bg-transparent z-50 relative">
                 <Link to="/" className="text-white text-2xl font-bold tracking-wider">
                     <span className="text-white">Secure</span>
@@ -29,10 +29,9 @@ export default function About() {
                 </div>
             </nav>
 
-            {/* 📄 Content */}
+
             <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 text-center">
-                {/* 🧠 Image */}
-                {/* 🧠 Image & Name */}
+
                 <motion.div
                     className="flex flex-col items-center"
                     initial={{ scale: 0.8, opacity: 0 }}
@@ -52,7 +51,7 @@ export default function About() {
                 </motion.div>
 
 
-                {/* 🧾 Bio */}
+                {/*  Bio */}
                 <motion.div
                     className="mt-6 max-w-xl text-[#e4e4e7] text-sm md:text-base leading-relaxed font-normal"
                     initial={{ opacity: 0, y: 30 }}
@@ -71,7 +70,7 @@ export default function About() {
                     </p>
                 </motion.div>
 
-                {/* 🌐 Social Icons */}
+
                 <motion.div
                     className="mt-6 flex gap-6 text-2xl"
                     initial={{ opacity: 0, y: 20 }}

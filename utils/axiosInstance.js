@@ -10,7 +10,7 @@ API.interceptors.response.use(
   async (err) => {
     const originalRequest = err.config;
 
-    // 🔐 Check for 406 - Unacceptable / Unauthorized access level
+    // Check for 406 - Unacceptable / Unauthorized access level
     if (err.response?.status === 406) {
       console.error("406 error: Unauthorized access. Redirecting...");
 
@@ -22,10 +22,10 @@ API.interceptors.response.use(
         window.location.href = "/unauthorized";
       }
 
-      return Promise.reject(err); // ⛔ STOP: do not retry anything
+      return Promise.reject(err); //  do not retry anything
     }
 
-    // 🔄 Token Refresh Attempt on 401
+    //  Token Refresh Attempt on 401
     if (err.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 

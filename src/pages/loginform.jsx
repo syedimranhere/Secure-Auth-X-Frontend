@@ -10,8 +10,7 @@ export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    // const { setUser } = UseUserContext();
-    // Handle rate limiting and unlock logic
+  
     useEffect(() => {
         const checkRateLimit = () => {
             const data = JSON.parse(localStorage.getItem("blockedInfo") || "{}");
@@ -59,8 +58,8 @@ export default function Login() {
             });
 
             if (response?.data?.success && response?.data?.user) {
-                console.log('Login successful:', response.data.user);
-                // setUser(response.data.user);
+                console.log('Login successful');
+         
                 navigate("/dashboard");
 
             }
@@ -95,7 +94,7 @@ export default function Login() {
                 <div className="absolute inset-0 bg-black/60 backdrop-blur-md" />
             </div>
 
-            {/* Foreground Content */}
+
             <div className="relative z-10">
                 {/* Navbar */}
                 <nav className="flex justify-between items-center px-8 py-4 bg-transparent">

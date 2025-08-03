@@ -10,7 +10,7 @@ export const UserContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
-  // const navigate = useNavigate();
+
   const location = useLocation();
   useEffect(() => {
     const checkAuth = async () => {
@@ -35,14 +35,14 @@ export const UserContextProvider = ({ children }) => {
           setUser(res.data.user);
           setIsAuthenticated(true);
           localStorage.setItem("user", JSON.stringify(res.data.user));
-          console.log("User verified:", res.data.user);
+          console.log("User verified:");
         }
       } catch (error) {
         console.error("User verification failed:", error?.response?.data || error.message);
         setIsAuthenticated(true);
         setUser(null);
         localStorage.removeItem("user");
-        // DO NOT redirect or refresh here — let the Axios interceptor do that
+        // DO NOT redirect or refresh here the Axios interceptor do that
       } finally {
         setLoading(false);
       }

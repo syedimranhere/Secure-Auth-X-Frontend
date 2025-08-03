@@ -73,7 +73,7 @@ export default function Home() {
           Create an account or log in to get started.
         </motion.p>
 
-        {/* Auth Buttons */}
+
         <motion.div
           className="mt-4 flex flex-wrap justify-center gap-3"
           initial={{ y: 15, opacity: 0 }}

@@ -46,7 +46,7 @@ export default function Register() {
             const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/v1/user/register`, data, {
                 withCredentials: true,
             });
-            console.log("Registration successful:", response.data);
+            console.log("Registration successful");
 
             setSuccessMessage("Account created! Redirecting to login...");
             setTimeout(() => navigate("/login"), 3000);
