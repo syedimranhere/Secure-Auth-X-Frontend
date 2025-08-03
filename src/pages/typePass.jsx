@@ -35,7 +35,7 @@ export default function ResetPassword() {
         try {
             setLoading(true);
             setMessage("Resetting Password...");
-            const resp = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/v1/user/reset-password`, {}, {
+            const resp = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/v1/user/reset-password`, { password: password }, {
                 withCredentials: true,
             });
             if (resp?.data?.success) {

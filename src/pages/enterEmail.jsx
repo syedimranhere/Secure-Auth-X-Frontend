@@ -79,7 +79,6 @@ export default function ForgetPass1() {
         } catch (err) {
             console.error("OTP error:", err?.response || err);
             // Check if backend sends a useful message
-
             setMessage("Invalid OTP | Try Again");
         }
     };
