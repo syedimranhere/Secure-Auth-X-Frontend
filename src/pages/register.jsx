@@ -67,7 +67,7 @@ export default function Register() {
     return (
         <div className="relative min-h-screen w-full bg-black">
             <div className="absolute inset-0">
-                <img src="/assets/bg.png" alt="bg" className="w-full h-full object-cover" />
+                <img src="/assets/bg.webp" alt="bg" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-black/60 backdrop-blur-md" />
             </div>
 

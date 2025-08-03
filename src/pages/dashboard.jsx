@@ -59,7 +59,7 @@ export const Dashboard = () => {
 
             <div className="absolute inset-0 z-0">
                 <img
-                    src="/assets/anotherbg.jpg"
+                    src="/assets/anotherbg.webp"
                     alt="Dashboard Background"
                     className="w-full h-full object-cover"
                 />
@@ -115,13 +115,12 @@ export const Dashboard = () => {
                             </p>
 
                             <p className="text-gray-100 text-sm md:text-base leading-relaxed">
-                                🔐 <strong className="text-cyan-300 font-medium">Session hijacking prevention</strong> is built-in: even if a token is intercepted,
-                                it becomes unusable on another browser or device.
+                                🔐 <strong className="text-cyan-300 font-medium">Session hijacking prevention</strong> is built-in. There are checks to ensure that tokens were not intercepted.
                             </p>
 
                             <p className="text-gray-100 text-sm md:text-base leading-relaxed">
                                 <strong className="text-cyan-300 font-medium">Refresh tokens auto-rotate every 5 minutes via interceptors</strong>,
-                                so even advanced interceptors can't reuse or replay them. Every session is isolated and short-lived by design.
+                                Every 5 minutes, the refresh token is automatically rotated to enhance security.
                             </p>
                         </div>
 

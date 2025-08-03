@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { FaEnvelope, FaGithub, FaLinkedin } from "react-icons/fa";
+import { FaEnvelope, FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
 
 
 export default function About() {
@@ -9,7 +9,7 @@ export default function About() {
             {/* 🖼️ Background */}
             <div className="absolute inset-0">
                 <img
-                    src="/assets/bg2.jpg"
+                    src="/assets/city2.webp"
                     alt="Background"
                     className="w-full h-full object-cover"
                 />
@@ -65,7 +65,7 @@ export default function About() {
                         technologies. This project — <strong>SecureAuthX</strong> — is a learning-based
                         authentication system built using React, TailwindCSS, Node.js, and Express.
                     </p>
-                    <p className="mt-3 text-gray-300 italic font-medium">
+                    <p className="mt-3 text-gray-400 italic font-medium">
                         SecureAuthX: Authentication system coded from ground up.
 
 
@@ -83,7 +83,7 @@ export default function About() {
                         href="https://github.com/syedimranhere"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="hover:text-[#294453] transition hover:scale-110"
+                        className="hover:text-[#294453] transition hover:scale-130"
                     >
                         <FaGithub />
                     </a>
@@ -91,7 +91,7 @@ export default function About() {
                         href="https://mail.google.com/mail/?view=cm&fs=1&to=imransyedhere@gmail.com&su=Let%27s%20Connect&body=Hey%20Imran,%20I%20checked%20out%20SecureAuthX!"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="hover:text-[#ff6464] transition hover:scale-110"
+                        className="hover:text-[#ff6464] transition hover:scale-130"
                     >
                         <FaEnvelope />
                     </a>
@@ -102,9 +102,18 @@ export default function About() {
                         href="https://www.linkedin.com/in/syed-imran-111538372/"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="hover:text-[#466fa5] transition hover:scale-110"
+                        className="hover:text-[#466fa5] transition hover:scale-130"
                     >
                         <FaLinkedin />
+                    </a>
+
+                    <a
+                        href="https://twitter.com/imransyedhere"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-[#282f4c] transition hover:scale-140"
+                    >
+                        <FaTwitter />
                     </a>
                 </motion.div>
             </div>

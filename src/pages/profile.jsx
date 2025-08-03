@@ -43,7 +43,7 @@ export default function Profile() {
             {/* Background Image with Blur */}
             <div className="absolute inset-0 z-0">
                 <img
-                    src="/assets/anotherbg.jpg"
+                    src="/assets/anotherbg.webp"
                     alt="Profile Background"
                     className="w-full h-full object-cover"
                 />

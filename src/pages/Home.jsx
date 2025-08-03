@@ -19,7 +19,7 @@ export default function Home() {
       {/* Background Image + Overlay */}
       <div className="absolute inset-0">
         <img
-          src="/assets/bg.png"
+          src="/assets/bg.webp"
           alt="Background"
           className="w-full h-full object-cover"
         />
