@@ -9,7 +9,7 @@ export default function About() {
             {/* 🖼️ Background */}
             <div className="absolute inset-0">
                 <img
-                    src="/assets/city2.webp"
+                    src="/assets/city2(2).webp"
                     alt="Background"
                     className="w-full h-full object-cover"
                 />
